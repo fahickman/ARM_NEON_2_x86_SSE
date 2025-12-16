@@ -83,14 +83,10 @@
 //***********************************************************************************
 #ifdef __GNUC__
 #   define _GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
-#   define _NEON2SSESTORAGE static
-#   define _NEON2SSE_ALIGN_16  __attribute__((aligned(16)))
-#   define _NEON2SSE_ALIGN_32  __attribute__((aligned(32)))
-#   ifdef __clang__
-#       define _NEON2SSE_INLINE _NEON2SSESTORAGE inline __attribute__((__gnu_inline__, __always_inline__))
-#   else
-#       define _NEON2SSE_INLINE _NEON2SSESTORAGE inline __attribute__((__gnu_inline__, __always_inline__, __artificial__))
-#   endif
+#   define _NEON2SSESTORAGE static inline
+#   define _NEON2SSE_ALIGN_16  alignas(16)
+#   define _NEON2SSE_ALIGN_32  alignas(32)
+#   define _NEON2SSE_INLINE _NEON2SSESTORAGE
 #   ifndef NEON2SSE_DISABLE_PERFORMANCE_WARNING
 #       if _GCC_VERSION <  40500
 #           define _NEON2SSE_PERFORMANCE_WARNING(function, explanation)   __attribute__((deprecated)) function
@@ -104,10 +100,10 @@
 #       define _NEON2SSE_64BIT  __x86_64__
 #   endif
 #else
-#   define _NEON2SSESTORAGE static
-#   define _NEON2SSE_ALIGN_16  __declspec(align(16))
-#   define _NEON2SSE_ALIGN_32  __declspec(align(32))
-#   define _NEON2SSE_INLINE _NEON2SSESTORAGE __inline
+#   define _NEON2SSESTORAGE static inline
+#   define _NEON2SSE_ALIGN_16  alignas(16)
+#   define _NEON2SSE_ALIGN_32  alignas(32)
+#   define _NEON2SSE_INLINE _NEON2SSESTORAGE
 #   if (defined(_MSC_VER) || defined (__INTEL_COMPILER)) && !defined(NEON2SSE_DISABLE_PERFORMANCE_WARNING)
 #       define _NEON2SSE_PERFORMANCE_WARNING(function, EXPLANATION) __declspec(deprecated(EXPLANATION)) function
 #       if defined(_M_X64)
